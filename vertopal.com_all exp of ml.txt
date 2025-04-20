@@ -1,0 +1,796 @@
+
+
+Q3) (1) Linear Regression
+
+Step 1: Import Libraries
+
+    import numpy as np
+    import pandas as pd
+    import matplotlib.pyplot as plt
+    from sklearn.model_selection import train_test_split
+    from sklearn.linear_model import LinearRegression
+    from sklearn.metrics import mean_squared_error, r2_score
+
+    C:\Users\Ashlesha Patil\AppData\Roaming\Python\Python311\site-packages\pandas\core\arrays\masked.py:60: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+      from pandas.core import (
+
+Step 2: Load the Dataset
+
+    # Load dataset (Example: Boston Housing Dataset)
+    import pandas as pd
+
+    # Load dataset from CSV
+    data = pd.read_csv('boston.csv')
+    # Display the first few rows of the dataset
+    print(data.head())
+
+          crim    zn  indus  chas    nox     rm   age     dis  rad  tax  ptratio  \
+    0  0.00632  18.0   2.31     0  0.538  6.575  65.2  4.0900    1  296     15.3   
+    1  0.02731   0.0   7.07     0  0.469  6.421  78.9  4.9671    2  242     17.8   
+    2  0.02729   0.0   7.07     0  0.469  7.185  61.1  4.9671    2  242     17.8   
+    3  0.03237   0.0   2.18     0  0.458  6.998  45.8  6.0622    3  222     18.7   
+    4  0.06905   0.0   2.18     0  0.458  7.147  54.2  6.0622    3  222     18.7   
+
+            b  lstat  medv  
+    0  396.90   4.98  24.0  
+    1  396.90   9.14  21.6  
+    2  392.83   4.03  34.7  
+    3  394.63   2.94  33.4  
+    4  396.90   5.33  36.2  
+
+Step 3: Prepare the Data
+
+    X = data.drop('medv', axis=1)
+    y = data['medv']
+
+Step 4: Split the Data
+
+    X_train, X_test, y_train, y_test = train_test_split(X, y,
+    test_size=0.2, random_state=42)
+
+Step 5: Train the Model
+
+    # Create the linear regression model
+    model = LinearRegression()
+    # Train the model
+    model.fit(X_train, y_train)
+    LinearRegression()
+
+    LinearRegression()
+
+Step 6: Make Predictions
+
+    # Make predictions
+    y_pred = model.predict(X_test)
+
+Step 7: Evaluate the Model
+
+    # Calculate Mean Squared Error (MSE)
+    mse = mean_squared_error(y_test, y_pred)
+    print('Mean Squared Error:', mse)
+    # Calculate R-squared (R²) score
+    r2 = r2_score(y_test, y_pred)
+    print('R-squared:', r2)
+
+    Mean Squared Error: 24.29111947497345
+    R-squared: 0.6687594935356329
+
+Step 8: Visualize the Results
+
+    # Scatter plot of actual vs predicted
+    plt.scatter(y_test, y_pred)
+    plt.xlabel('Actual Prices')
+    plt.ylabel('Predicted Prices')
+    plt.title('Actual vs Predicted Prices')
+    # Add the linear regression line (45-degree line)
+    plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)],
+    color='red', linestyle='--')
+    plt.show()
+
+[]
+
+Q4) (2) Logistic Regression
+
+Step 1: Import Necessary Libraries
+
+    # Import necessary libraries
+    import numpy as np
+    import pandas as pd
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+    from sklearn.datasets import load_diabetes
+    from sklearn.model_selection import train_test_split
+    from sklearn.preprocessing import StandardScaler
+    from sklearn.linear_model import LogisticRegression
+    from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, roc_curve, auc
+
+Step 2: Load Datasets
+
+    # Load the diabetes dataset
+    diabetes = load_diabetes()
+    X, y = diabetes.data, diabetes.target
+
+Step 3: Convert the target variable to binary (1 for diabetes, 0 for no
+diabetes)
+
+    # Convert the target variable to binary (1 for diabetes, 0 for no diabetes)
+    y_binary = (y > np.median(y)).astype(int)
+
+Step 4: Split the data into training and testing sets
+
+    # Split the data into training and testing sets
+    X_train, X_test, y_train, y_test = train_test_split(
+    X, y_binary, test_size=0.2, random_state=42)
+
+Step 5: Standardize features
+
+    # Standardize features
+    scaler = StandardScaler()
+    X_train = scaler.fit_transform(X_train)
+    X_test = scaler.transform(X_test)
+
+Step 6: Train the Logistic Regression model
+
+    # Train the Logistic Regression model
+    model = LogisticRegression()
+    model.fit(X_train, y_train)
+
+    LogisticRegression()
+
+Step 7: Evaluate the model
+
+    # Evaluate the model
+    y_pred = model.predict(X_test)
+    accuracy = accuracy_score(y_test, y_pred)
+    print("Accuracy: {:.2f}%".format(accuracy * 100))
+
+    Accuracy: 73.03%
+
+Step 8: Evaluate the model (Confusion Matrix)
+
+    # evaluate the model
+    print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
+    print("\nClassification Report:\n", classification_report(y_test,y_pred))
+
+    Confusion Matrix:
+     [[36 13]
+     [11 29]]
+
+    Classification Report:
+                   precision    recall  f1-score   support
+
+               0       0.77      0.73      0.75        49
+               1       0.69      0.72      0.71        40
+
+        accuracy                           0.73        89
+       macro avg       0.73      0.73      0.73        89
+    weighted avg       0.73      0.73      0.73        89
+
+Step 9: Visualize the decision boundary with accuracy information
+
+    # Visualize the decision boundary with accuracy information
+    plt.figure(figsize=(8, 6))
+    sns.scatterplot(x=X_test[:, 2], y=X_test[:, 8], hue=y_test, palette={
+    0: 'blue', 1: 'red'}, marker='o')
+    plt.xlabel("BMI")
+    plt.ylabel("Age")
+    plt.title("Logistic Regression Decision Boundary\nAccuracy: {:.2f}%".format(accuracy * 100))
+    plt.legend(title="Diabetes", loc="upper right")
+    plt.show()
+
+[]
+
+Step 10 : Plot ROC Curve
+
+    # Plot ROC Curve
+    y_prob = model.predict_proba(X_test)[:, 1]
+    fpr, tpr, thresholds = roc_curve(y_test, y_prob)
+    roc_auc = auc(fpr, tpr)
+    plt.figure(figsize=(8, 6))
+    plt.plot(fpr, tpr, color='darkorange', lw=2,
+    label=f'ROC Curve (AUC = {roc_auc:.2f})')
+    plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--',label='Random')
+    plt.xlabel('False Positive Rate')
+    plt.ylabel('True Positive Rate')
+    plt.title('Receiver Operating Characteristic (ROC) Curve\nAccuracy:{:.2f}%'.format(accuracy * 100))
+    plt.legend(loc="lower right")
+    plt.show()
+
+[]
+
+Q5) (3) Support Vector Machines
+
+Step 1: Importing libraries and Data Visualization
+
+    import numpy as np
+    from sklearn.datasets import load_iris
+    import matplotlib.pyplot as plt
+    data = load_iris()
+    X = data.data[:, :2]
+    y = data.target
+    y = np.where(y == 0, -1, 1)
+    plt.scatter(X[:, 0], X[:, 1], c=y, cmap='bwr')
+    plt.xlabel('Sepal Length')
+    plt.ylabel('Sepal Width')
+    plt.title('Iris Dataset (Setosa vs. Non-Setosa)')
+    plt.show()
+
+[]
+
+Step 2: SVM Class Definition
+
+    class SVM:
+        def __init__(self, learning_rate=0.001, lambda_param=0.01, n_iters=1000):
+            self.lr = learning_rate
+            self.lambda_param = lambda_param
+            self.n_iters = n_iters
+            self.w = None
+            self.b = None
+
+        def fit(self, X, y):
+            n_samples, n_features = X.shape
+            y_ = np.where(y <= 0, -1, 1)
+            self.w = np.zeros(n_features)
+            self.b = 0
+
+            for _ in range(self.n_iters):
+                for idx, x_i in enumerate(X):
+                    condition = y_[idx] * (np.dot(x_i, self.w) - self.b) >= 1
+                    if condition:
+                        self.w -= self.lr * (2 * self.lambda_param * self.w)
+                    else:
+                        self.w -= self.lr * (2 * self.lambda_param * self.w - np.dot(x_i, y_[idx]))
+                        self.b -= self.lr * y_[idx]
+
+        def predict(self, X):
+            approx = np.dot(X, self.w) - self.b
+            return np.sign(approx)
+
+Step 3: Training the Model
+
+    svm = SVM(learning_rate=0.001, lambda_param=0.01, n_iters=1000)
+    svm.fit(X, y)
+
+    def plot_decision_boundary(X, y, model):
+        plt.scatter(X[:, 0], X[:, 1], c=y, cmap='bwr')
+        ax = plt.gca()
+        xlim = ax.get_xlim()
+        ylim = ax.get_ylim()
+        xx, yy = np.meshgrid(np.linspace(xlim[0], xlim[1], 50),
+                             np.linspace(ylim[0], ylim[1], 50))
+        xy = np.vstack([xx.ravel(), yy.ravel()])
+        Z = model.predict(xy.T).reshape(xx.shape)
+        ax.contourf(xx, yy, Z, alpha=0.3, cmap='bwr')
+        plt.show()
+
+    plot_decision_boundary(X, y, svm)
+
+[]
+
+Step 4: Prediction
+
+    new_samples = np.array([[0, 0], [4, 4]])
+    predictions = svm.predict(new_samples)
+    print(predictions)
+
+    [-1. -1.]
+
+Step 5: Testing the Implementation
+
+    from sklearn.svm import SVC
+    # Convert the labels back to 0 and 1, as required by sklearn's SVC
+    y_sklearn = np.where(y == -1, 0, 1)
+    # Train SVM using scikit-learn's SVC class
+    clf = SVC(kernel='linear')
+    clf.fit(X, y_sklearn)
+
+    SVC(kernel='linear')
+
+    # Predict using the new samples
+    new_samples = np.array([[0, 0], [4, 4]])
+    # Print predictions from sklearn's SVC model
+    print(clf.predict(new_samples))
+
+    [0 0]
+
+    import numpy as np
+    from sklearn.datasets import load_iris
+    import matplotlib.pyplot as plt
+    from sklearn.svm import SVC
+
+    # Step 1: Load Data
+    data = load_iris()
+    X = data.data[:, :2] 
+    # We are only using the first two features (Sepal length and Sepal width)
+    y = data.target
+    y = np.where(y == 0, -1, 1) 
+    # Convert Setosa (0) to -1, and others to 1
+
+    # Step 2: Custom SVM Class Definition
+    class SVM:
+        def __init__(self, learning_rate=0.001, lambda_param=0.01, n_iters=1000):
+            self.lr = learning_rate
+            self.lambda_param = lambda_param
+            self.n_iters = n_iters
+            self.w = None
+            self.b = None
+
+        def fit(self, X, y):
+            n_samples, n_features = X.shape
+            y_ = np.where(y <= 0, -1, 1)
+            self.w = np.zeros(n_features)
+            self.b = 0
+
+            for _ in range(self.n_iters):
+                for idx, x_i in enumerate(X):
+                    condition = y_[idx] * (np.dot(x_i, self.w) - self.b) >= 1
+                    if condition:
+                        self.w -= self.lr * (2 * self.lambda_param * self.w)
+                    else:
+                        self.w -= self.lr * (2 * self.lambda_param * self.w - np.dot(x_i, y_[idx]))
+                        self.b -= self.lr * y_[idx]
+
+        def predict(self, X):
+            approx = np.dot(X, self.w) - self.b
+            return np.sign(approx)
+
+    # Step 3: Train Custom SVM Model
+    svm = SVM(learning_rate=0.001, lambda_param=0.01, n_iters=1000)
+    svm.fit(X, y)
+
+    # Step 4: Define a function to plot the decision boundary
+    def plot_decision_boundary(X, y, model, title="Decision Boundary"):
+        plt.scatter(X[:, 0], X[:, 1], c=y, cmap='bwr', alpha=0.6)
+        ax = plt.gca()
+        xlim = ax.get_xlim()
+        ylim = ax.get_ylim()
+        xx, yy = np.meshgrid(np.linspace(xlim[0], xlim[1], 50),
+                             np.linspace(ylim[0], ylim[1], 50))
+        xy = np.vstack([xx.ravel(), yy.ravel()]).T
+        Z = model.predict(xy).reshape(xx.shape)
+        ax.contourf(xx, yy, Z, alpha=0.3, cmap='bwr')
+        plt.xlabel('Sepal Length')
+        plt.ylabel('Sepal Width')
+        plt.title(title)
+        plt.show()
+
+    # Step 5: Plot decision boundary for custom SVM model
+    plot_decision_boundary(X, y, svm, title="Custom SVM Model")
+
+    # Step 6: Train the SVC model from sklearn
+    y_sklearn = np.where(y == -1, 0, 1)  # Convert labels back to 0 and 1
+
+    # for SVC
+    clf = SVC(kernel='linear')
+    clf.fit(X, y_sklearn)
+
+    # Step 7: Plot decision boundary for sklearn's SVC model
+    plot_decision_boundary(X, y_sklearn, clf, title="SVC Model from sklearn")
+
+[]
+
+[]
+
+Q4) (6) Hebbian Learning
+
+    def hebbian_learning(samples):
+        print(f'{"Input":^12} {"Target":^8} {"Weight Changes":^25} {"Updated Weights":^25}')
+        w1, w2, b = 0, 0, 0
+        print(' ' * 53 + f'({w1:3},{w2:3},{b:3})')
+        
+        for x1, x2, y in samples:
+            dw1, dw2, db = x1 * y, x2 * y, y
+            w1 += dw1
+            w2 += dw2
+            b  += db
+            print(f'({x1:2},{x2:2})     {y:2}     ({dw1:4},{dw2:4},{db:4})         ({w1:4},{w2:4},{b:4})')
+        print("\n")
+
+    # Samples for AND gate
+    AND_samples = {
+        'binary_input_binary_output': [
+            [1, 1, 1],
+            [1, 0, 0],
+            [0, 1, 0],
+            [0, 0, 0]
+        ],
+        'binary_input_bipolar_output': [
+            [1, 1, 1],
+            [1, 0, -1],
+            [0, 1, -1],
+            [0, 0, -1]
+        ],
+        'bipolar_input_bipolar_output': [
+            [1, 1, 1],
+            [1, -1, -1],
+            [-1, 1, -1],
+            [-1, -1, -1]
+        ]
+    }
+
+    # Running the learning algorithm
+    print('🔹 AND with Binary Input and Binary Output')
+    hebbian_learning(AND_samples['binary_input_binary_output'])
+
+    print('🔹 AND with Binary Input and Bipolar Output')
+    hebbian_learning(AND_samples['binary_input_bipolar_output'])
+
+    print('🔹 AND with Bipolar Input and Bipolar Output')
+    hebbian_learning(AND_samples['bipolar_input_bipolar_output'])
+
+    🔹 AND with Binary Input and Binary Output
+       Input      Target       Weight Changes            Updated Weights     
+                                                         (  0,  0,  0)
+    ( 1, 1)      1     (   1,   1,   1)         (   1,   1,   1)
+    ( 1, 0)      0     (   0,   0,   0)         (   1,   1,   1)
+    ( 0, 1)      0     (   0,   0,   0)         (   1,   1,   1)
+    ( 0, 0)      0     (   0,   0,   0)         (   1,   1,   1)
+
+
+    🔹 AND with Binary Input and Bipolar Output
+       Input      Target       Weight Changes            Updated Weights     
+                                                         (  0,  0,  0)
+    ( 1, 1)      1     (   1,   1,   1)         (   1,   1,   1)
+    ( 1, 0)     -1     (  -1,   0,  -1)         (   0,   1,   0)
+    ( 0, 1)     -1     (   0,  -1,  -1)         (   0,   0,  -1)
+    ( 0, 0)     -1     (   0,   0,  -1)         (   0,   0,  -2)
+
+
+    🔹 AND with Bipolar Input and Bipolar Output
+       Input      Target       Weight Changes            Updated Weights     
+                                                         (  0,  0,  0)
+    ( 1, 1)      1     (   1,   1,   1)         (   1,   1,   1)
+    ( 1,-1)     -1     (  -1,   1,  -1)         (   0,   2,   0)
+    (-1, 1)     -1     (   1,  -1,  -1)         (   1,   1,  -1)
+    (-1,-1)     -1     (   1,   1,  -1)         (   2,   2,  -2)
+
+Q5) (7) Expectation - Maximization Algorithm
+
+Step 01 : Import the necessary libraries
+
+    import numpy as np
+
+    # Given binary data
+    data = [
+    [1, 1, 1, 1, 0, 1, 1, 1, 1, 0],
+    [1, 1, 1, 1, 1, 1, 1, 0, 1, 1],
+    [1, 1, 1, 0, 1, 1, 1, 1, 0, 0],
+    [1, 1, 0, 1, 1, 1, 1, 0, 1, 1],
+    [1, 0, 1, 1, 0, 1, 1, 1, 1, 0]
+    ]
+
+    # Initialize parameters
+    theta_A, theta_B = 0.6, 0.5  # Initial values
+    threshold = 1e-4  # Slightly relaxed to prevent too much drift
+    max_iterations = 5  # Stopping early to keep values closer to initial assumptions
+    iteration = 0
+
+    while iteration < max_iterations:
+        iteration += 1
+        prev_theta_A, prev_theta_B = theta_A, theta_B  # Store previous values
+        
+        # E-step: Compute responsibilities
+        P_A, P_B = [], []
+        for seq in data:
+            h = sum(seq)
+            t = len(seq) - h
+            
+            # Compute likelihoods
+            L_A = (theta_A ** h) * ((1 - theta_A) ** t)
+            L_B = (theta_B ** h) * ((1 - theta_B) ** t)
+            
+            # Normalize probabilities
+            denom = L_A + L_B
+            P_A_i = L_A / denom if denom > 0 else 0.5
+            P_B_i = L_B / denom if denom > 0 else 0.5
+            P_A.append(P_A_i)
+            P_B.append(P_B_i)
+        
+        # M-step: Update theta_A and theta_B
+        total_heads_A = sum(P_A[i] * sum(data[i]) for i in range(len(data)))
+        total_flips_A = sum(P_A[i] * len(data[i]) for i in range(len(data)))
+        theta_A = total_heads_A / total_flips_A if total_flips_A else prev_theta_A
+        
+        total_heads_B = sum(P_B[i] * sum(data[i]) for i in range(len(data)))
+        total_flips_B = sum(P_B[i] * len(data[i]) for i in range(len(data)))
+        theta_B = total_heads_B / total_flips_B if total_flips_B else prev_theta_B
+        
+        # Check convergence (looser threshold)
+        if abs(theta_A - prev_theta_A) < threshold and abs(theta_B - prev_theta_B) < threshold:
+            break
+
+    # Output final estimates
+    print(f"Stopped after {iteration} iterations.")
+    print(f"Estimated theta_A: {theta_A:.6f}")
+    print(f"Estimated theta_B: {theta_B:.6f}")
+
+    Stopped after 5 iterations.
+    Estimated theta_A: 0.780122
+    Estimated theta_B: 0.779878
+
+Q6) (8) McCulloch Pitts Model.
+
+    import numpy as np
+    import pandas as pd
+
+    def mcp_neuron(weights, threshold, inputs):
+        outputs = []
+        for x in inputs:
+            total = np.dot(weights, x)
+            output = 1 if total >= threshold else 0
+            outputs.append(output)
+        return outputs
+
+    # Inputs
+    in_2 = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
+    in_1 = np.array([[0], [1]])
+
+    # Logic Gates using MCP
+    def logic_gates():
+        gates = {}
+
+        gates["AND"]  = {"weights": [1, 1],   "threshold": 2,  "inputs": in_2}
+        gates["OR"]   = {"weights": [1, 1],   "threshold": 1,  "inputs": in_2}
+        gates["NAND"] = {"weights": [-1, -1], "threshold": -1, "inputs": in_2}
+        gates["NOR"]  = {"weights": [-1, -1], "threshold": 0,  "inputs": in_2}
+        gates["NOT"]  = {"weights": [-1],     "threshold": 0,  "inputs": in_1}
+
+        # XOR using OR and NAND in 2nd layer
+        and_out = np.array(mcp_neuron([1, 1], 2, in_2))
+        or_out = np.array(mcp_neuron([1, 1], 1, in_2))
+        nand_out = np.array(mcp_neuron([-1, -1], -1, in_2))
+        xor_in = np.column_stack((or_out, nand_out))
+        gates["XOR"] = {"weights": [1, 1], "threshold": 2, "inputs": xor_in}
+
+        # XNOR is NOT of XOR
+        xor_out = np.array(mcp_neuron([1, 1], 2, xor_in)).reshape(-1, 1)
+        gates["XNOR"] = {"weights": [-1], "threshold": 0, "inputs": xor_out}
+
+        return gates
+
+    # Execute and Print
+    all_gates = logic_gates()
+
+    for gate, params in all_gates.items():
+        weights = params["weights"]
+        threshold = params["threshold"]
+        inputs = params["inputs"]
+        outputs = mcp_neuron(weights, threshold, inputs)
+
+        # Print header
+        print(f"\n🔹 {gate} Gate")
+        print(f"   Weights: {weights}")
+        print(f"   Threshold: {threshold}")
+
+        # Create and print table
+        df = pd.DataFrame(inputs, columns=[f"x{i+1}" for i in range(inputs.shape[1])])
+        df['Output'] = outputs
+        print(df.to_string(index=False))
+
+
+    🔹 AND Gate
+       Weights: [1, 1]
+       Threshold: 2
+     x1  x2  Output
+      0   0       0
+      0   1       0
+      1   0       0
+      1   1       1
+
+    🔹 OR Gate
+       Weights: [1, 1]
+       Threshold: 1
+     x1  x2  Output
+      0   0       0
+      0   1       1
+      1   0       1
+      1   1       1
+
+    🔹 NAND Gate
+       Weights: [-1, -1]
+       Threshold: -1
+     x1  x2  Output
+      0   0       1
+      0   1       1
+      1   0       1
+      1   1       0
+
+    🔹 NOR Gate
+       Weights: [-1, -1]
+       Threshold: 0
+     x1  x2  Output
+      0   0       1
+      0   1       0
+      1   0       0
+      1   1       0
+
+    🔹 NOT Gate
+       Weights: [-1]
+       Threshold: 0
+     x1  Output
+      0       1
+      1       0
+
+    🔹 XOR Gate
+       Weights: [1, 1]
+       Threshold: 2
+     x1  x2  Output
+      0   1       0
+      1   1       1
+      1   1       1
+      1   0       0
+
+    🔹 XNOR Gate
+       Weights: [-1]
+       Threshold: 0
+     x1  Output
+      0       1
+      1       0
+      1       0
+      0       1
+
+Q7) (9) Single Layer Perceptron Learning Algorithm
+
+    w1, w2, b = 1, 1, 1
+
+    def activate(x):
+        return 1 if x >= 0 else 0
+
+    def train_perceptron(inputs, desired_outputs, learning_rate, epochs):
+        global w1, w2, b
+        for epoch in range(epochs):
+            total_error = 0
+            for i in range(len(inputs)):
+                A, B = inputs[i]
+                target_output = desired_outputs[i]
+                output = activate(w1 * A + w2 * B + b)
+                error = target_output - output
+                w1 += learning_rate * error * A
+                w2 += learning_rate * error * B
+                b += learning_rate * error
+                total_error += abs(error)
+            if total_error == 0:
+                break  # training complete if there's no error
+
+    inputs = [(0, 0), (0, 1), (1, 0), (1, 1)]
+    desired_outputs = [0, 0, 0, 1]
+    learning_rate = 0.1
+    epochs = 100
+
+    train_perceptron(inputs, desired_outputs, learning_rate, epochs)
+
+    for i in range(len(inputs)):
+        A, B = inputs[i]
+        output = activate(w1 * A + w2 * B + b)
+        print(f"Input: ({A}, {B}) Output: {output}")
+        print(f"W0 W1 W2: ({b}, {w1},{w2}) Output: {output}")
+
+    Input: (0, 0) Output: 0
+    W0 W1 W2: (-0.5999999999999999, 0.40000000000000013,0.40000000000000013) Output: 0
+    Input: (0, 1) Output: 0
+    W0 W1 W2: (-0.5999999999999999, 0.40000000000000013,0.40000000000000013) Output: 0
+    Input: (1, 0) Output: 0
+    W0 W1 W2: (-0.5999999999999999, 0.40000000000000013,0.40000000000000013) Output: 0
+    Input: (1, 1) Output: 1
+    W0 W1 W2: (-0.5999999999999999, 0.40000000000000013,0.40000000000000013) Output: 1
+
+Q8) (10) Principal Component Analysis
+
+Step 1. Import all the libraries
+
+    # import all libraries
+    import pandas as pd
+    import numpy as np
+    import matplotlib.pyplot as plt
+    %matplotlib inline
+    from sklearn.decomposition import PCA
+    from sklearn.preprocessing import StandardScaler
+
+Step 2. Loading Data
+
+    #import the breast _cancer dataset
+    from sklearn.datasets import load_breast_cancer
+    data=load_breast_cancer()
+    data.keys()
+
+    # Check the output classes
+    print(data['target_names'])
+
+    # Check the input attributes
+    print(data['feature_names'])
+
+    ['malignant' 'benign']
+    ['mean radius' 'mean texture' 'mean perimeter' 'mean area'
+     'mean smoothness' 'mean compactness' 'mean concavity'
+     'mean concave points' 'mean symmetry' 'mean fractal dimension'
+     'radius error' 'texture error' 'perimeter error' 'area error'
+     'smoothness error' 'compactness error' 'concavity error'
+     'concave points error' 'symmetry error' 'fractal dimension error'
+     'worst radius' 'worst texture' 'worst perimeter' 'worst area'
+     'worst smoothness' 'worst compactness' 'worst concavity'
+     'worst concave points' 'worst symmetry' 'worst fractal dimension']
+
+Step 3. Apply PCA
+
+    # construct a dataframe using pandas
+    df1=pd.DataFrame(data['data'],columns=data['feature_names'])
+
+    # Scale data before applying PCA
+    scaling=StandardScaler()
+
+    # Use fit and transform method 
+    scaling.fit(df1)
+    Scaled_data=scaling.transform(df1)
+
+    # Set the n_components=3
+    principal=PCA(n_components=3)
+    principal.fit(Scaled_data)
+    x=principal.transform(Scaled_data)
+
+    # Check the dimensions of data after PCA
+    print(x.shape)
+
+    (569, 3)
+
+Step 4. Check Components
+
+    # Check the values of eigen vectors
+    # prodeced by principal components
+    principal.components_
+
+    array([[ 0.21890244,  0.10372458,  0.22753729,  0.22099499,  0.14258969,
+             0.23928535,  0.25840048,  0.26085376,  0.13816696,  0.06436335,
+             0.20597878,  0.01742803,  0.21132592,  0.20286964,  0.01453145,
+             0.17039345,  0.15358979,  0.1834174 ,  0.04249842,  0.10256832,
+             0.22799663,  0.10446933,  0.23663968,  0.22487053,  0.12795256,
+             0.21009588,  0.22876753,  0.25088597,  0.12290456,  0.13178394],
+           [-0.23385713, -0.05970609, -0.21518136, -0.23107671,  0.18611304,
+             0.15189161,  0.06016536, -0.03476751,  0.19034877,  0.36657545,
+            -0.10555215,  0.08997968, -0.08945724, -0.15229262,  0.20443045,
+             0.23271591,  0.19720729,  0.13032155,  0.183848  ,  0.28009203,
+            -0.21986638, -0.0454673 , -0.19987843, -0.21935186,  0.17230436,
+             0.14359318,  0.09796412, -0.00825725,  0.14188335,  0.27533946],
+           [-0.00853124,  0.06454991, -0.00931422,  0.02869953, -0.10429192,
+            -0.07409158,  0.00273384, -0.02556353, -0.04023993, -0.02257409,
+             0.26848139,  0.37463367,  0.26664537,  0.21600653,  0.30883899,
+             0.15477969,  0.17646372,  0.22465758,  0.2885843 ,  0.21150377,
+            -0.047507  , -0.04229783, -0.04854652, -0.01190233, -0.25979762,
+            -0.23607563, -0.17305732, -0.17034405, -0.27131265, -0.23279128]])
+
+Step 5. Plot the components (Visualization)
+
+    plt.figure(figsize=(10,10))
+    plt.scatter(x[:,0],x[:,1],c=data['target'],cmap='plasma')
+    plt.xlabel('pc1')
+    plt.ylabel('pc2')
+
+    Text(0, 0.5, 'pc2')
+
+[]
+
+    # import relevant libraries for 3d graph
+    from mpl_toolkits.mplot3d import Axes3D
+    fig = plt.figure(figsize=(10,10))
+     
+    # choose projection 3d for creating a 3d graph
+    axis = fig.add_subplot(111, projection='3d')
+     
+    # x[:,0]is pc1,x[:,1] is pc2 while x[:,2] is pc3
+    axis.scatter(x[:,0],x[:,1],x[:,2], c=data['target'],cmap='plasma')
+    axis.set_xlabel("PC1", fontsize=10)
+    axis.set_ylabel("PC2", fontsize=10)
+    axis.set_zlabel("PC3", fontsize=10)
+
+    C:\Users\Ashlesha Patil\AppData\Local\Temp\ipykernel_12096\675919571.py:9: MatplotlibDeprecationWarning: The clean function was deprecated in Matplotlib 3.8 and will be removed two minor releases later. Use none, you no longer need to clean a Grouper instead.
+      axis.scatter(x[:,0],x[:,1],x[:,2], c=data['target'],cmap='plasma')
+
+    Text(0.5, 0, 'PC3')
+
+[]
+
+Step 6. Calculate variance ratio
+
+    # check how much variance is explained by each principal component
+    print(principal.explained_variance_ratio_)
+
+    [0.44272026 0.18971182 0.09393163]
